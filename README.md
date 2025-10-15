@@ -170,9 +170,7 @@ game_audio_SoundManager <.. game_core_GameApp
 game_ui_HUD <.. game_entities_Player
 ```
 
-> *Nota*: lo schema è stato compattato per fini espositivi. La versione completa (più estesa) è disponibile nel sorgente del progetto.
 
----
 
 ## 2. Design (come soddisfo i requisiti)
 
@@ -201,7 +199,6 @@ Controller_GameLoop --> View_HUD
 Model_World o-- Model_Entities
 ```
 
-> Schema intenzionalmente minimale per evidenziare i ruoli e i flussi principali senza dettagli implementativi.
 
 ### 2.2 Design dettagliato (selezione di decisioni chiave)
 
@@ -230,9 +227,7 @@ Model_World o-- Model_Entities
 **Soluzione**: `CollisionManager` con dispatch per tipo di entità e separazione tra *detect* (intersezione) e *resolve* (conseguenza).  
 **Motivazione**: responsabilità chiare e possibilità di ottimizzare (*broad-phase* in evoluzioni future).
 
-> Ulteriori dettagli (diagrammi e snippet) sono documentati nel codice sorgente.
 
----
 
 ## 3. Sviluppo
 
@@ -250,9 +245,7 @@ Ho realizzato test **JUnit** mirati a:
 - **Input reattivo**: separazione fra *pressed* e *released* per distinguere azioni puntuali da azioni continuative.
 - **Caricamento risorse**: naming coerente e paths centralizzati per semplificare manutenzione.
 
-> Eventuali porzioni di codice ispirate a esempi pubblici sono state rielaborate e citate nei commenti del sorgente, quando applicabile.
 
----
 
 ## 4. Guida utente
 
@@ -269,7 +262,6 @@ Ho realizzato test **JUnit** mirati a:
 ### 4.3 Obiettivo
 Arrivare alla fine del livello evitando i nemici e sfruttando elementi come molle e piattaforme.
 
----
 
 ## 5. Commenti finali
 
@@ -282,10 +274,3 @@ Arrivare alla fine del livello evitando i nemici e sfruttando elementi come moll
 - Bilanciamento fra responsività del controllo e stabilità della fisica.
 - Gestione simultanea di molte collisioni con frame-time stabile.
 - Sincronizzazione fra aggiornamento logico e rendering.
-
----
-
-## 6. Informazioni
-Progetto ideato e sviluppato interamente da **Filippo Forcellini**.
-
-© 2025 – Tutti i diritti riservati.
