@@ -1,9 +1,3 @@
-# Relazione di Progetto – SonicX
-
-> **Nota metodologica**: questa relazione segue la struttura richiesta (Analisi → Design → Sviluppo → Guida utente → Commenti finali), mantenendo la netta separazione tra **analisi** (cosa il sistema deve fare) e **progetto/implementazione** (come il sistema lo fa). Il tono è in **prima persona** perché ho realizzato e documentato il progetto personalmente.
-
----
-
 ## 1. Analisi
 
 ### 1.1 Obiettivo e contesto
