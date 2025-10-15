@@ -228,7 +228,6 @@ Model_World o-- Model_Entities
 **Motivazione**: responsabilità chiare e possibilità di ottimizzare (*broad-phase* in evoluzioni future).
 
 
-
 ## 3. Sviluppo
 
 ### 3.1 Testing automatizzato
@@ -244,7 +243,6 @@ Ho realizzato test **JUnit** mirati a:
 - **Piattaforme mobili generalizzate**: ho definito un asse parametrico (orizzontale/verticale) per riuso della logica.
 - **Input reattivo**: separazione fra *pressed* e *released* per distinguere azioni puntuali da azioni continuative.
 - **Caricamento risorse**: naming coerente e paths centralizzati per semplificare manutenzione.
-
 
 
 ## 4. Guida utente
@@ -274,3 +272,5 @@ Arrivare alla fine del livello evitando i nemici e sfruttando elementi come moll
 - Bilanciamento fra responsività del controllo e stabilità della fisica.
 - Gestione simultanea di molte collisioni con frame-time stabile.
 - Sincronizzazione fra aggiornamento logico e rendering.
+
+
