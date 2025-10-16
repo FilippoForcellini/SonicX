@@ -4,8 +4,10 @@
 
 ## 🧩 Introduzione
 
-Il progetto **SonicX** nasce come realizzazione accademica di un videogioco a piattaforme 2D ispirato alla saga di *Sonic the Hedgehog*. 
+Il progetto **SonicX** nasce come realizzazione accademica di un videogioco a piattaforme 2D ispirato alla saga di *Sonic the Hedgehog*.  
 L’obiettivo principale è unire la **programmazione orientata agli oggetti (OOP)** con la **progettazione di un motore di gioco modulare**, applicando concetti come ereditarietà, polimorfismo, incapsulamento e gestione degli eventi.
+
+Il progetto è stato sviluppato con l’intento non solo di replicare un classico platform, ma di creare un ambiente di sviluppo flessibile e estendibile, capace di integrare nuove meccaniche e livelli con interventi minimi sul codice sorgente.
 
 ---
 
@@ -26,6 +28,16 @@ L’obiettivo principale è unire la **programmazione orientata agli oggetti (OO
 - Architettura modulare, leggibile e facilmente estendibile.  
 - Rendering stabile e reattivo con **JavaFX**.  
 - Esecuzione fluida su PC standard.
+
+### 🔍 Analisi dei Requisiti Estesa
+
+Durante la fase iniziale di progettazione, sono state considerate varie alternative:
+- **Motore grafico:** si è scelto JavaFX rispetto a librerie come LWJGL o Swing per la semplicità di integrazione e la compatibilità con i requisiti accademici.  
+- **Fisica e collisioni:** è stata adottata una gestione manuale a bounding-box per controllare direttamente le interazioni ed evitare overhead.  
+- **Gestione dei livelli:** ogni livello è definito tramite classi specifiche (es. `Level1`, `Level2`) per permettere un’estensione immediata del gioco.  
+- **Scalabilità:** il progetto è pensato per accogliere facilmente nuovi elementi (es. power-up, trappole, boss secondari).  
+
+Il risultato è un sistema coerente, leggibile e facilmente mantenibile nel tempo, con un equilibrio tra semplicità e completezza.
 
 ---
 
@@ -130,13 +142,17 @@ L’architettura segue il pattern **Model–View–Controller (MVC)**, adattato 
 | **View** | Rendering grafico, HUD e menu (JavaFX). |
 | **Controller** | Gestione degli input e del ciclo di gioco (GameApp, InputHandler). |
 
-**Ciclo di gioco (`Game Loop`)**
+### 🔧 Approfondimento Architetturale
 
-1. **Input:** lettura dei comandi da tastiera.  
-2. **Update:** aggiornamento della logica, fisica e collisioni.  
-3. **Render:** disegno a schermo degli elementi grafici.
+L’architettura del progetto è stata disegnata per massimizzare la **modularità**.  
+Ogni livello, entità o effetto è gestito come modulo indipendente, riducendo le dipendenze e semplificando i test.  
+Il ciclo di vita del gioco segue queste fasi principali:
 
-Questa struttura garantisce fluidità e sincronizzazione costante.
+1. **Inizializzazione:** caricamento risorse, musica e oggetti di gioco.  
+2. **Esecuzione:** loop principale che aggiorna la logica e renderizza.  
+3. **Terminazione:** rilascio delle risorse e chiusura ordinata dell’applicazione.
+
+L’intero sistema si basa su un uso efficiente della memoria e sulla pulizia dei riferimenti ciclici, garantendo stabilità anche in sessioni prolungate.
 
 ---
 
@@ -149,6 +165,16 @@ Questa struttura garantisce fluidità e sincronizzazione costante.
 | **Template Method** | I livelli derivano da `Level`, modificando solo le parti specifiche. |
 | **Singleton** | `SoundManager` centralizza la gestione audio. |
 | **Factory** | Crea dinamicamente entità e livelli. |
+
+#### 📘 Analisi dei Pattern
+
+Ogni pattern è stato scelto per rispondere a una specifica esigenza progettuale:
+
+- **State** → permette di isolare il comportamento del player e di sostituirlo dinamicamente.  
+- **Observer** → mantiene sincronizzati HUD e Player senza accoppiamento diretto.  
+- **Template Method** → evita la duplicazione di codice tra i diversi livelli.  
+- **Singleton** → garantisce l’unicità delle risorse audio durante l’esecuzione.  
+- **Factory** → permette l’inizializzazione modulare e ordinata degli oggetti di gioco.  
 
 #### 📘 Schema UML – Pattern State
 
@@ -172,27 +198,17 @@ classDiagram
 
 ---
 
-## 🧪 Sviluppo e Testing
+## ⚙️ Analisi delle Prestazioni e Ottimizzazioni
 
-### 🧾 Testing automatizzato
+L’ottimizzazione delle prestazioni è stata affrontata sin dalle prime fasi di sviluppo:
 
-È stato realizzato un sistema di test **JUnit** per verificare la correttezza logica delle principali componenti:
+- **Gestione memoria:** caricamento lazy delle risorse grafiche e audio.  
+- **Rendering:** batch update per ridurre il numero di operazioni grafiche per frame.  
+- **Collisioni:** controlli a griglia e bounding-box per limitare i calcoli superflui.  
+- **Audio:** riproduzione asincrona in thread separato per ridurre la latenza.  
+- **Frame rate:** testato stabile a 60 FPS su macchine di fascia media.  
 
-- **CollisionManager** → rilevamento e risoluzione delle collisioni.  
-- **Player** → gestione del salto, danni e interazione con molle.  
-- **HUD** → aggiornamento coerente di vite e punteggio.  
-- **SoundManager** → caricamento e riproduzione corretta dei suoni.  
-
----
-
-### 🧱 Note di sviluppo
-
-- Uso di `enum Axis` per definire direzioni di movimento delle piattaforme.  
-- Metodo `bounceOnSpring()` per la fisica elastica delle molle.  
-- Timer JavaFX per animazioni e invulnerabilità temporanea.  
-- `RandomUtil` per spawn casuale di nemici e bonus.  
-- Audio gestito in modo asincrono per evitare lag.  
-- Separazione netta tra **logica** e **grafica**.
+Queste scelte hanno garantito una buona efficienza e una giocabilità fluida anche in livelli con molti elementi attivi.
 
 ---
 
@@ -236,33 +252,13 @@ Mi sono occupato personalmente di:
 
 ---
 
-## 🎮 Guida Utente
+## 🧠 Riflessione Personale
 
-### ▶️ Avvio del gioco
+Questo progetto ha rappresentato un’importante occasione di crescita personale e tecnica.  
+Sviluppare **SonicX** mi ha permesso di comprendere a fondo la complessità di un videogioco: dal coordinamento tra fisica e grafica, alla gestione efficiente della memoria, fino alla creazione di un codice realmente riutilizzabile.  
 
-Per avviare il gioco, eseguire la classe principale:
-
-```bash
-java GameApp
-```
-
-oppure da IDE:
-
-> Eseguire `game.Main` o `GameApp.java` con **JavaFX** configurato.
-
-### ⌨️ Comandi
-
-| **Tasto** | **Azione** |
-|------------|-------------|
-| ← / → | Muove Sonic a sinistra o destra |
-| Spazio | Salta |
-| Invio (Enter) | Avvia la partita |
-| Esc | Torna al menu principale |
-
-### 🎯 Obiettivo
-
-Raggiungere la **FinishGate** di ogni livello evitando nemici e raccogliendo anelli.  
-Il gioco termina in caso di perdita di tutte le vite o vittoria contro il boss finale.
+Ogni difficoltà ha rafforzato la mia capacità di analisi e problem solving, avvicinandomi al modo di pensare tipico dello sviluppo software professionale.  
+Il progetto costituisce oggi una base solida da cui partire per realizzare versioni più evolute e sperimentali.
 
 ---
 
