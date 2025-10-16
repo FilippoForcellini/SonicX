@@ -1,48 +1,53 @@
-🎮 Relazione di Progetto – SonicX
-Analisi
+# 🎮 **Relazione di Progetto – SonicX**
 
-Requisiti
+---
 
-Il progetto SonicX mira alla realizzazione di un videogioco a piattaforme bidimensionale ispirato alla saga di Sonic the Hedgehog.
-L’obiettivo principale è unire la programmazione orientata agli oggetti (OOP) con la progettazione di un motore di gioco 2D, permettendo di mettere in pratica concetti di ereditarietà, polimorfismo, incapsulamento e gestione degli eventi.
+## 🧩 Introduzione
 
-Requisiti funzionali
+Il progetto **SonicX** nasce come realizzazione accademica di un videogioco a piattaforme 2D ispirato alla saga di *Sonic the Hedgehog*.  
+L’obiettivo principale è unire la **programmazione orientata agli oggetti (OOP)** con la **progettazione di un motore di gioco modulare**, applicando concetti come ereditarietà, polimorfismo, incapsulamento e gestione degli eventi.
 
-Movimento del personaggio principale (corsa, salto, accelerazione, interazione con molle e piattaforme mobili).
+---
 
-Gestione delle collisioni con nemici, ostacoli e piattaforme.
+## ⚙️ Analisi
 
-Implementazione di più livelli con obiettivi e boss finale.
+### 🔹 Requisiti funzionali
 
-Sistema HUD con punteggio, tempo e vite.
+- Movimento del personaggio principale (corsa, salto, accelerazione, interazione con molle e piattaforme mobili).  
+- Gestione delle collisioni con nemici, ostacoli e piattaforme.  
+- Implementazione di più livelli con obiettivi e boss finale.  
+- Sistema **HUD** con vite, punteggio e tempo.  
+- Menu iniziale e schermate di vittoria/sconfitta.  
+- Gestione di musica di sottofondo ed effetti sonori.
 
-Menu iniziale e schermate di vittoria/sconfitta.
+### 🔹 Requisiti non funzionali
 
-Gestione di musica di sottofondo ed effetti sonori.
+- Portabilità su **Java 11+**.  
+- Architettura modulare, leggibile e facilmente estendibile.  
+- Rendering stabile e reattivo con **JavaFX**.  
+- Esecuzione fluida su PC standard.
 
-Requisiti non funzionali
+---
 
-Portabilità su Java 11+.
+## 🧱 Modello del Dominio
 
-Architettura modulare, leggibile e facilmente estendibile.
+Il gioco è composto da diverse entità che cooperano per creare l’ambiente interattivo:
 
-Gestione fluida degli input e rendering grafico stabile tramite JavaFX.
+| **Entità** | **Descrizione** |
+|-------------|-----------------|
+| **Player** | Personaggio principale controllato dal giocatore (Sonic). Gestisce movimento, animazioni e fisica. |
+| **Enemy / Boss** | Nemici autonomi e boss con stati multipli di comportamento. |
+| **Level** | Contiene piattaforme, molle, nemici e logica del livello. |
+| **CollisionManager** | Gestisce collisioni e interazioni tra entità. |
+| **Spring / MovingPlatform / FinishGate** | Elementi dinamici che influenzano la fisica o segnano la fine del livello. |
+| **SoundManager** | Gestisce musica ed effetti sonori. |
+| **HUD** | Mostra vite, punteggio e tempo di gioco. |
 
-Esecuzione ottimizzata per PC standard.
+---
 
-Analisi e modello del dominio
+### 🧩 Schema UML del Dominio
 
-Il dominio del gioco è composto da un insieme di entità principali che cooperano per formare l’ambiente di gioco:
-
-Entità	Descrizione
-Player	Il personaggio controllato dall’utente (Sonic). Gestisce movimento, fisica e animazioni.
-Enemy / Boss	Nemici autonomi o con comportamento di attacco, compreso un boss finale.
-Level	Contenitore di piattaforme, molle, nemici e obiettivi del livello.
-CollisionManager	Gestisce tutte le collisioni tra entità e superfici.
-Spring / MovingPlatform / FinishGate	Elementi dinamici che influenzano il movimento o segnano la fine del livello.
-SoundManager	Centralizza la gestione di suoni ed effetti.
-HUD	Mostra vite, punteggio e tempo di gioco.
-Schema UML del dominio
+```mermaid
 classDiagram
     class GameApp {
         +start()
@@ -109,36 +114,45 @@ classDiagram
     Level --> CollisionManager
     Player --> SoundManager
     Level --> HUD
+```
 
-Design
-Architettura
+---
 
-L’architettura segue lo schema Model-View-Controller (MVC) semplificato:
+## 🧠 Design
 
-Componente	Responsabilità
-Model	Gestione logica di gioco (entità, collisioni, livelli).
-View	Rendering grafico e HUD (JavaFX).
-Controller	Gestione degli input e del ciclo di gioco (GameApp, InputHandler).
+### 🧩 Architettura generale
 
-Il game loop, implementato tramite AnimationTimer, segue tre fasi principali:
+L’architettura segue il pattern **Model–View–Controller (MVC)**, adattato al contesto videoludico.
 
-Input: lettura dei tasti premuti e rilasciati.
+| **Componente** | **Ruolo** |
+|-----------------|-----------|
+| **Model** | Contiene logica di gioco (entità, collisioni, livelli). |
+| **View** | Rendering grafico, HUD e menu (JavaFX). |
+| **Controller** | Gestione degli input e del ciclo di gioco (GameApp, InputHandler). |
 
-Update: aggiornamento di logica, posizione, fisica e collisioni.
+**Ciclo di gioco (`Game Loop`)**
 
-Render: disegno degli elementi grafici a schermo.
+1. **Input:** lettura dei comandi da tastiera.  
+2. **Update:** aggiornamento della logica, fisica e collisioni.  
+3. **Render:** disegno a schermo degli elementi grafici.
 
 Questa struttura garantisce fluidità e sincronizzazione costante.
 
-Design dettagliato
-Pattern software utilizzati
-Pattern	Ruolo nel progetto
-State / Strategy	Gestione degli stati del Player (camminata, salto, invulnerabilità, scudo).
-Observer	L’HUD osserva il Player e aggiorna punteggio, vite e tempo.
-Template Method	Le classi Level1, Level2, Level3 derivano da Level, modificando solo layout e nemici.
-Singleton	SoundManager garantisce un’unica istanza per la gestione audio.
-Factory	Gestione modulare della creazione di entità e livelli.
-UML dei principali pattern
+---
+
+### 🧩 Pattern di Progettazione Utilizzati
+
+| **Pattern** | **Funzione nel progetto** |
+|--------------|----------------------------|
+| **State / Strategy** | Gestisce gli stati del Player (camminata, salto, invulnerabilità, scudo). |
+| **Observer** | L’HUD osserva il Player e aggiorna vite, punteggio e tempo. |
+| **Template Method** | I livelli derivano da `Level`, modificando solo le parti specifiche. |
+| **Singleton** | `SoundManager` centralizza la gestione audio. |
+| **Factory** | Crea dinamicamente entità e livelli. |
+
+#### 📘 Schema UML – Pattern State
+
+```mermaid
 classDiagram
     class PlayerState {
         <<interface>>
@@ -154,115 +168,105 @@ classDiagram
     PlayerState <|.. JumpingState
     PlayerState <|.. InvulnerableState
     Player --> PlayerState
+```
 
+---
 
-Il pattern State permette di separare i diversi comportamenti di Sonic (camminata, salto, invulnerabilità), favorendo l’estendibilità e la chiarezza del codice.
+## 🧪 Sviluppo e Testing
 
-Sviluppo
-Testing automatizzato
+### 🧾 Testing automatizzato
 
-È stato implementato un sistema di test automatico con JUnit.
-Le principali classi testate sono:
+È stato realizzato un sistema di test **JUnit** per verificare la correttezza logica delle principali componenti:
 
-CollisionManager: verifica delle collisioni corrette e gestione delle interazioni.
+- **CollisionManager** → rilevamento e risoluzione delle collisioni.  
+- **Player** → gestione del salto, danni e interazione con molle.  
+- **HUD** → aggiornamento coerente di vite e punteggio.  
+- **SoundManager** → caricamento e riproduzione corretta dei suoni.  
 
-Player: corretto comportamento in salto, danno e movimento.
+---
 
-SoundManager: caricamento e riproduzione degli effetti.
+### 🧱 Note di sviluppo
 
-HUD: aggiornamento coerente del punteggio e delle vite.
+- Uso di `enum Axis` per definire direzioni di movimento delle piattaforme.  
+- Metodo `bounceOnSpring()` per la fisica elastica delle molle.  
+- Timer JavaFX per animazioni e invulnerabilità temporanea.  
+- `RandomUtil` per spawn casuale di nemici e bonus.  
+- Audio gestito in modo asincrono per evitare lag.  
+- Separazione netta tra **logica** e **grafica**.
 
-Note di sviluppo
+---
 
-Durante la fase di sviluppo sono stati adottati alcuni accorgimenti per ottimizzare il codice:
+## 🧭 Commenti finali
 
-Uso di enum Axis per la direzione di movimento delle piattaforme mobili.
+### ✅ Autovalutazione
 
-Metodo bounceOnSpring() nel Player per simulare la fisica della molla.
+Mi sono occupato personalmente di:
+- Architettura generale del progetto e organizzazione dei pacchetti.  
+- Gestione collisioni, movimento e fisica.  
+- Creazione dei livelli e dell’HUD.  
+- Integrazione dell’audio e del menu principale.  
 
-Gestione delle animazioni tramite Timer JavaFX.
+**Punti di forza**
+- Architettura modulare e leggibile.  
+- Codice riutilizzabile e commentato.  
+- Gameplay fluido e coerente.  
 
-Utilizzo di RandomUtil per generare casualmente nemici e oggetti bonus.
+**Punti da migliorare**
+- Ottimizzazione del caricamento iniziale.  
+- Maggiore test coverage.  
+- Miglior separazione logica/grafica.  
 
-Implementazione asincrona di audio e musica per ridurre la latenza.
+---
 
-Separazione completa tra logica di gioco e rendering grafico.
+### 🚀 Sviluppi futuri
 
-Commenti finali
-Autovalutazione e lavori futuri
+- Aggiunta di **power-up** (scudi, invincibilità, velocità).  
+- Implementazione del **salvataggio progressi** e punteggio globale.  
+- Miglioramento della fisica (pendenze, attrito realistico).  
+- Introduzione di nuovi **livelli** e modalità “Boss Rush”.  
 
-Mi sono occupato personalmente della progettazione e dello sviluppo del progetto SonicX in tutte le sue fasi:
+---
 
-Struttura architetturale e organizzazione dei pacchetti.
+### ⚠️ Difficoltà riscontrate
 
-Gestione collisioni, movimento e fisica di gioco.
+- Gestione precisa delle collisioni multiple.  
+- Sincronizzazione tra thread di logica e thread grafico JavaFX.  
+- Integrazione fluida di musica/effetti senza perdita di frame.  
+- Ottimizzazione del frame rate e del caricamento delle risorse.  
 
-Progettazione dei livelli e dell’HUD.
+---
 
-Integrazione dell’audio e del menu grafico.
+## 🎮 Guida Utente
 
-Punti di forza
-
-Architettura pulita e modulare.
-
-Codice riutilizzabile e facilmente estendibile.
-
-Gameplay fluido e coerente con la logica classica dei platform 2D.
-
-Punti da migliorare
-
-Ottimizzazione del caricamento iniziale e delle texture.
-
-Maggiore copertura dei test unitari.
-
-Migliore separazione tra logica e rendering in alcune classi.
-
-Sviluppi futuri
-
-Introduzione di power-up (scudi, velocità, invincibilità).
-
-Sistema di punteggio globale e salvataggio progressi.
-
-Miglioramento della fisica (pendenze, attrito, molle avanzate).
-
-Aggiunta di nuovi livelli e modalità bonus.
-
-Difficoltà riscontrate
-
-Le principali difficoltà emerse durante lo sviluppo sono state:
-
-Gestione corretta delle collisioni tra entità multiple in movimento.
-
-Sincronizzazione tra logica di gioco e thread grafico JavaFX.
-
-Integrazione fluida di musica ed effetti senza bloccare il rendering.
-
-Ottimizzazione delle prestazioni per mantenere un frame rate costante.
-
-Guida utente
-Avvio del gioco
+### ▶️ Avvio del gioco
 
 Per avviare il gioco, eseguire la classe principale:
 
+```bash
 java GameApp
+```
 
+oppure da IDE:
 
-Oppure da IDE:
+> Eseguire `game.Main` o `GameApp.java` con **JavaFX** configurato.
 
-Eseguire game.Main o GameApp.java con JavaFX configurato.
+### ⌨️ Comandi
 
-Comandi
-Tasto	Azione
-← / →	Muove Sonic a sinistra o destra
-Spazio	Salta
-Invio (Enter)	Avvia la partita dal menu
-Esc	Torna al menu principale
-Obiettivo
+| **Tasto** | **Azione** |
+|------------|-------------|
+| ← / → | Muove Sonic a sinistra o destra |
+| Spazio | Salta |
+| Invio (Enter) | Avvia la partita |
+| Esc | Torna al menu principale |
 
-Raggiungere la FinishGate di ogni livello evitando nemici e raccogliendo anelli.
-La partita termina in caso di perdita di tutte le vite o dopo la sconfitta del boss finale.
+### 🎯 Obiettivo
 
-Conclusioni
+Raggiungere la **FinishGate** di ogni livello evitando nemici e raccogliendo anelli.  
+Il gioco termina in caso di perdita di tutte le vite o vittoria contro il boss finale.
 
-Il progetto SonicX rappresenta un caso pratico di come le tecniche di programmazione a oggetti possano essere applicate in un contesto videoludico.
-L’architettura modulare, la gestione del ciclo di gioco e l’integrazione con JavaFX dimostrano la capacità di coniugare teoria e pratica in un risultato concreto, interattivo e coerente con le logiche del game design moderno.
+---
+
+## 🧾 Conclusioni
+
+Il progetto **SonicX** rappresenta un esempio concreto di applicazione dei principi OOP e dei pattern di progettazione in un contesto videoludico.  
+L’architettura modulare, la gestione del ciclo di gioco e l’integrazione con JavaFX mostrano come teoria e pratica possano convergere in un risultato coerente, dinamico e accademicamente valido.
