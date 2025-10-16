@@ -1,5 +1,6 @@
 🎮 Relazione di Progetto – SonicX
 Analisi
+
 Requisiti
 
 Il progetto SonicX mira alla realizzazione di un videogioco a piattaforme bidimensionale ispirato alla saga di Sonic the Hedgehog.
