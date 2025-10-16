@@ -1,276 +1,267 @@
-## 1. Analisi
+🎮 Relazione di Progetto – SonicX
+Analisi
+Requisiti
 
-### 1.1 Obiettivo e contesto
-Voglio realizzare un videogioco 2D a piattaforme ispirato allo stile di *Sonic*, in cui l’utente guida un personaggio attraverso livelli progressivi, evita pericoli, interagisce con elementi del mondo (molle, piattaforme, portali di fine livello) e completa obiettivi. L’applicazione deve essere fruibile da un utente senza conoscenze tecniche, con comandi semplici e feedback visivo/sonoro chiari.
+Il progetto SonicX mira alla realizzazione di un videogioco a piattaforme bidimensionale ispirato alla saga di Sonic the Hedgehog.
+L’obiettivo principale è unire la programmazione orientata agli oggetti (OOP) con la progettazione di un motore di gioco 2D, permettendo di mettere in pratica concetti di ereditarietà, polimorfismo, incapsulamento e gestione degli eventi.
 
-### 1.2 Requisiti (cosa deve fare)
-**Requisiti funzionali**
-1. Il giocatore può muoversi orizzontalmente e saltare.
-2. Il sistema presenta più livelli con ostacoli, piattaforme (anche mobili) ed elementi interattivi (es. molle).
-3. Sono presenti nemici con comportamenti diversi e un boss in almeno un livello avanzato.
-4. Il gioco termina il livello quando il giocatore raggiunge un traguardo (FinishGate) o esaurisce le vite.
-5. L’interfaccia mostra informazioni essenziali: vite, punteggio/tempo, stato del personaggio (es. scudo attivo).
-6. Il sistema gestisce l’input da tastiera in modo responsivo (tenere premuto vs. pressione singola).
-7. Il sistema fornisce feedback audio/visivo per azioni principali (salto, danno, vittoria, sconfitta).
-8. È presente un menu iniziale per avvio partita e uscita.
+Requisiti funzionali
 
-**Requisiti non funzionali**
-1. Esperienza fluida (responsività dei controlli; tempi di risposta percepiti brevi).
-2. Organizzazione chiara dei contenuti (livelli progressivi, interazioni coerenti, feedback comprensibili).
-3. Robustezza di base (gestione errori comuni, assenza di crash durante il normale uso).
-4. Portabilità e facilità di avvio per l’utente finale.
+Movimento del personaggio principale (corsa, salto, accelerazione, interazione con molle e piattaforme mobili).
 
-### 1.3 Glossario minimo (termini del dominio)
-- **Player**: entità controllata dall’utente.
-- **Enemy/Nemico**: entità ostile che può danneggiare il player.
-- **Boss**: nemico principale con comportamenti più complessi.
-- **Level**: scenario giocabile con obiettivi e fine livello.
-- **FinishGate**: traguardo che conclude il livello.
-- **Spring**: molla che spinge verso l’alto.
-- **MovingPlatform**: piattaforma che si muove lungo un asse.
-- **Shield**: protezione temporanea del giocatore.
-- **HUD**: sovraimpressione con informazioni utili (vite, tempo, ecc.).
+Gestione delle collisioni con nemici, ostacoli e piattaforme.
 
-### 1.4 Analisi e modello del dominio (senza soluzioni)
-Il problema riguarda la navigazione di un personaggio (Player) in un mondo composto da livelli (Level) popolati da elementi passivi (piattaforme fisse e mobili, molle) e attivi (nemici, boss). Il Player interagisce con l’ambiente secondo regole di gioco (caduta, salto, rimbalzo su molle, raccolta/scudo, danno da nemici). La chiusura del livello avviene al raggiungimento del traguardo. 
+Implementazione di più livelli con obiettivi e boss finale.
 
-Sono **fuori dallo scope** (per questa versione) elementi come: salvataggi persistenti, editor di livelli, multiplayer, IA avanzata dei nemici, ranking online. Tali aspetti potranno essere affrontati in evoluzioni future.
+Sistema HUD con punteggio, tempo e vite.
 
-#### 1.4.1 UML del dominio
-> Lo schema seguente riporta **le entità e le relazioni concettuali** del dominio (astratte dal dettaglio implementativo). Non mostra scelte tecnologiche né campi/metodi privati non essenziali alla comprensione del problema.
+Menu iniziale e schermate di vittoria/sconfitta.
 
-```mermaid
+Gestione di musica di sottofondo ed effetti sonori.
+
+Requisiti non funzionali
+
+Portabilità su Java 11+.
+
+Architettura modulare, leggibile e facilmente estendibile.
+
+Gestione fluida degli input e rendering grafico stabile tramite JavaFX.
+
+Esecuzione ottimizzata per PC standard.
+
+Analisi e modello del dominio
+
+Il dominio del gioco è composto da un insieme di entità principali che cooperano per formare l’ambiente di gioco:
+
+Entità	Descrizione
+Player	Il personaggio controllato dall’utente (Sonic). Gestisce movimento, fisica e animazioni.
+Enemy / Boss	Nemici autonomi o con comportamento di attacco, compreso un boss finale.
+Level	Contenitore di piattaforme, molle, nemici e obiettivi del livello.
+CollisionManager	Gestisce tutte le collisioni tra entità e superfici.
+Spring / MovingPlatform / FinishGate	Elementi dinamici che influenzano il movimento o segnano la fine del livello.
+SoundManager	Centralizza la gestione di suoni ed effetti.
+HUD	Mostra vite, punteggio e tempo di gioco.
+Schema UML del dominio
 classDiagram
-%% === Inizio schema importato da "schema UML.mermaid" (ripulito ove opportuno per leggibilità) ===
-class game_audio_Kind {
-    <<enum>>
-}
+    class GameApp {
+        +start()
+        +initGame()
+    }
 
-class game_entities_State {
-    <<enum>>
-}
+    class Player {
+        -x : double
+        -y : double
+        -velocityX : double
+        -velocityY : double
+        -isJumping : boolean
+        +update()
+        +jump()
+        +moveLeft()
+        +moveRight()
+        +render()
+    }
 
-class game_entities_Type {
-    <<enum>>
-}
+    class Enemy {
+        -x : double
+        -y : double
+        +update()
+        +render()
+    }
 
-class game_world_elements_Axis {
-    <<enum>>
-}
+    class Boss {
+        -state : BossState
+        +update()
+        +attack()
+        +changeState()
+    }
 
-class game_audio_SoundManager {
-    +play(Kind)
-    +stop(Kind)
-}
+    class Level {
+        -platforms : List
+        -enemies : List
+        -player : Player
+        +update()
+        +render()
+    }
 
-class game_core_GameApp {
-    +start()
-}
+    class CollisionManager {
+        +checkCollision(entityA, entityB)
+        +resolveCollisions()
+    }
 
-class game_core_InputHandler
+    class SoundManager {
+        +playSound()
+        +stopAll()
+    }
 
-class game_entities_Boss {
-    +update()
-    +hit()
-}
+    class HUD {
+        -score : int
+        -time : int
+        -lives : int
+        +update()
+        +render()
+    }
 
-class game_entities_Enemy {
-    +update()
-    +hit()
-}
+    GameApp --> Level
+    Level --> Player
+    Level --> Enemy
+    Level --> Boss
+    Level --> CollisionManager
+    Player --> SoundManager
+    Level --> HUD
 
-class game_entities_EnemyFactory {
-    +createEnemy(Type) Enemy
-}
+Design
+Architettura
 
-class game_entities_MovingEntity {
-    +update()
-}
+L’architettura segue lo schema Model-View-Controller (MVC) semplificato:
 
-class game_entities_Player {
-    +jump()
-    +moveLeft()
-    +moveRight()
-    +takeDamage()
-    +collectShield()
-}
+Componente	Responsabilità
+Model	Gestione logica di gioco (entità, collisioni, livelli).
+View	Rendering grafico e HUD (JavaFX).
+Controller	Gestione degli input e del ciclo di gioco (GameApp, InputHandler).
 
-class game_entities_Projectile
+Il game loop, implementato tramite AnimationTimer, segue tre fasi principali:
 
-class game_entities_Shield {
-    +activate()
-    +deactivate()
-}
+Input: lettura dei tasti premuti e rilasciati.
 
-class game_entities_SmartProjectile
+Update: aggiornamento di logica, posizione, fisica e collisioni.
 
-class game_level_Level {
-    +load()
-    +update()
-}
+Render: disegno degli elementi grafici a schermo.
 
-class game_level_Level1
-class game_level_Level2
-class game_level_Level3
+Questa struttura garantisce fluidità e sincronizzazione costante.
 
-class game_ui_HUD {
-    +update()
-}
-
-class game_world_CollisionManager {
-    +checkAll()
-}
-
-class game_world_elements_FinishGate
-class game_world_elements_MovingPlatform {
-    +axis: Axis
-}
-class game_world_elements_Platform
-class game_world_elements_Spring
-
-%% Relazioni principali
-
-game_core_GameApp --> game_core_InputHandler
-game_core_GameApp --> game_ui_HUD
-
-game_level_Level <|-- game_level_Level1
-game_level_Level <|-- game_level_Level2
-game_level_Level <|-- game_level_Level3
-
-game_level_Level --> game_entities_Player
-
-game_level_Level --> game_entities_Enemy
-
-game_level_Level --> game_world_elements_Platform
-
-game_level_Level --> game_world_elements_MovingPlatform
-
-game_level_Level --> game_world_elements_Spring
-
-game_level_Level --> game_world_elements_FinishGate
-
-%% Collisioni/Interazioni
-
-game_world_CollisionManager --> game_entities_Player
-
-game_world_CollisionManager --> game_entities_Enemy
-
-game_world_CollisionManager --> game_world_elements_Platform
-
-game_world_CollisionManager --> game_world_elements_MovingPlatform
-
-game_world_CollisionManager --> game_world_elements_Spring
-
-game_world_CollisionManager --> game_world_elements_FinishGate
-
-%% Audio/HUD
-
-game_audio_SoundManager <.. game_core_GameApp
-
-game_ui_HUD <.. game_entities_Player
-```
-
-
-
-## 2. Design (come soddisfo i requisiti)
-
-### 2.1 Architettura ad alto livello
-A livello architetturale adotto una separazione **MVC semplificata**: 
-- **Model:** entità di gioco e regole (Player, Enemy, Boss, Level, CollisionManager, elementi del mondo).  
-- **View:** rendering grafico e HUD.  
-- **Controller:** ciclo di gioco e gestione input.
-
-L’avvio carica il menu, quindi la selezione conduce al livello, dove il ciclo di gioco coordina: raccolta input → aggiornamento logica → aggiornamento vista.
-
-#### 2.1.1 UML architetturale (mirato)
-```mermaid
+Design dettagliato
+Pattern software utilizzati
+Pattern	Ruolo nel progetto
+State / Strategy	Gestione degli stati del Player (camminata, salto, invulnerabilità, scudo).
+Observer	L’HUD osserva il Player e aggiorna punteggio, vite e tempo.
+Template Method	Le classi Level1, Level2, Level3 derivano da Level, modificando solo layout e nemici.
+Singleton	SoundManager garantisce un’unica istanza per la gestione audio.
+Factory	Gestione modulare della creazione di entità e livelli.
+UML dei principali pattern
 classDiagram
-class Controller_GameLoop
-class View_HUD
-class View_Renderer
-class Model_World
-class Model_Entities
+    class PlayerState {
+        <<interface>>
+        +handleInput()
+        +update()
+    }
 
-Controller_GameLoop --> Model_World
-Controller_GameLoop --> Model_Entities
-Controller_GameLoop --> View_Renderer
-Controller_GameLoop --> View_HUD
+    class WalkingState
+    class JumpingState
+    class InvulnerableState
 
-Model_World o-- Model_Entities
-```
-
-
-### 2.2 Design dettagliato (selezione di decisioni chiave)
-
-#### A) Gestione degli stati (Pattern **State/Strategy**)
-**Problema**: player e boss hanno comportamenti variabili (idle, corsa, salto; fasi del boss).  
-**Soluzione**: interfacce di stato con implementazioni intercambiabili; il contesto delega il comportamento allo stato corrente.  
-**Motivazione**: estendibilità (aggiungere nuovi stati senza toccare il contesto) e chiarezza delle responsabilità.
-
-#### B) Livelli estendibili (Pattern **Template Method**)
-**Problema**: i livelli condividono struttura ma differiscono per layout/nemici.  
-**Soluzione**: classe base `Level` con passi fissi e hook per specializzazioni (`spawnEnemies()`, `initPlatforms()`).  
-**Motivazione**: riduzione duplicazione e coerenza del flusso di gioco.
-
-#### C) HUD reattivo (Pattern **Observer**)
-**Problema**: la UI deve riflettere in tempo reale stato vite/tempo/scudo.  
-**Soluzione**: HUD osserva il Player; ad ogni variazione notifica un aggiornamento.  
-**Motivazione**: disaccoppiamento tra logica di gioco e presentazione.
-
-#### D) Audio centralizzato (Pattern **Singleton** accuratamente limitato)
-**Problema**: necessità di un punto unico di riproduzione suoni, evitando istanze concorrenti.  
-**Soluzione**: gestore audio centralizzato con API semplici; uso cauto di singleton per il *service* condiviso.  
-**Motivazione**: semplicità d’uso e coerenza degli effetti.
-
-#### E) Collisioni scalabili
-**Problema**: molte entità con interazioni diverse.  
-**Soluzione**: `CollisionManager` con dispatch per tipo di entità e separazione tra *detect* (intersezione) e *resolve* (conseguenza).  
-**Motivazione**: responsabilità chiare e possibilità di ottimizzare (*broad-phase* in evoluzioni future).
+    PlayerState <|.. WalkingState
+    PlayerState <|.. JumpingState
+    PlayerState <|.. InvulnerableState
+    Player --> PlayerState
 
 
-## 3. Sviluppo
+Il pattern State permette di separare i diversi comportamenti di Sonic (camminata, salto, invulnerabilità), favorendo l’estendibilità e la chiarezza del codice.
 
-### 3.1 Testing automatizzato
-Ho realizzato test **JUnit** mirati a:
-- Validazione collisioni basilari (atterraggio su piattaforma, urto laterale, rimbalzo su molla).
-- Gestione vite/danno del player in scenari tipici.
-- Invarianti del loop (nessuna eccezione in presence di n entità standard).
+Sviluppo
+Testing automatizzato
 
-**Criteri**: test rapidi, ripetibili, indipendenti da input utente.
+È stato implementato un sistema di test automatico con JUnit.
+Le principali classi testate sono:
 
-### 3.2 Note di sviluppo (selezione di scelte interessanti)
-- **Timer e invulnerabilità temporizzata**: ho introdotto temporizzazioni per stati speciali (es. scudo/danno) per garantire feedback e bilanciamento.
-- **Piattaforme mobili generalizzate**: ho definito un asse parametrico (orizzontale/verticale) per riuso della logica.
-- **Input reattivo**: separazione fra *pressed* e *released* per distinguere azioni puntuali da azioni continuative.
-- **Caricamento risorse**: naming coerente e paths centralizzati per semplificare manutenzione.
+CollisionManager: verifica delle collisioni corrette e gestione delle interazioni.
+
+Player: corretto comportamento in salto, danno e movimento.
+
+SoundManager: caricamento e riproduzione degli effetti.
+
+HUD: aggiornamento coerente del punteggio e delle vite.
+
+Note di sviluppo
+
+Durante la fase di sviluppo sono stati adottati alcuni accorgimenti per ottimizzare il codice:
+
+Uso di enum Axis per la direzione di movimento delle piattaforme mobili.
+
+Metodo bounceOnSpring() nel Player per simulare la fisica della molla.
+
+Gestione delle animazioni tramite Timer JavaFX.
+
+Utilizzo di RandomUtil per generare casualmente nemici e oggetti bonus.
+
+Implementazione asincrona di audio e musica per ridurre la latenza.
+
+Separazione completa tra logica di gioco e rendering grafico.
+
+Commenti finali
+Autovalutazione e lavori futuri
+
+Mi sono occupato personalmente della progettazione e dello sviluppo del progetto SonicX in tutte le sue fasi:
+
+Struttura architetturale e organizzazione dei pacchetti.
+
+Gestione collisioni, movimento e fisica di gioco.
+
+Progettazione dei livelli e dell’HUD.
+
+Integrazione dell’audio e del menu grafico.
+
+Punti di forza
+
+Architettura pulita e modulare.
+
+Codice riutilizzabile e facilmente estendibile.
+
+Gameplay fluido e coerente con la logica classica dei platform 2D.
+
+Punti da migliorare
+
+Ottimizzazione del caricamento iniziale e delle texture.
+
+Maggiore copertura dei test unitari.
+
+Migliore separazione tra logica e rendering in alcune classi.
+
+Sviluppi futuri
+
+Introduzione di power-up (scudi, velocità, invincibilità).
+
+Sistema di punteggio globale e salvataggio progressi.
+
+Miglioramento della fisica (pendenze, attrito, molle avanzate).
+
+Aggiunta di nuovi livelli e modalità bonus.
+
+Difficoltà riscontrate
+
+Le principali difficoltà emerse durante lo sviluppo sono state:
+
+Gestione corretta delle collisioni tra entità multiple in movimento.
+
+Sincronizzazione tra logica di gioco e thread grafico JavaFX.
+
+Integrazione fluida di musica ed effetti senza bloccare il rendering.
+
+Ottimizzazione delle prestazioni per mantenere un frame rate costante.
+
+Guida utente
+Avvio del gioco
+
+Per avviare il gioco, eseguire la classe principale:
+
+java GameApp
 
 
-## 4. Guida utente
+Oppure da IDE:
 
-### 4.1 Avvio rapido
-1. Avviare l’applicazione.  
-2. Nel menu iniziale, scegliere **Nuova Partita**.  
-3. Completare i livelli raggiungendo il **FinishGate**.
+Eseguire game.Main o GameApp.java con JavaFX configurato.
 
-### 4.2 Comandi
-- **Frecce**: movimento laterale  
-- **Spazio**: salto  
-- **Esc**: torna al menu  
+Comandi
+Tasto	Azione
+← / →	Muove Sonic a sinistra o destra
+Spazio	Salta
+Invio (Enter)	Avvia la partita dal menu
+Esc	Torna al menu principale
+Obiettivo
 
-### 4.3 Obiettivo
-Arrivare alla fine del livello evitando i nemici e sfruttando elementi come molle e piattaforme.
+Raggiungere la FinishGate di ogni livello evitando nemici e raccogliendo anelli.
+La partita termina in caso di perdita di tutte le vite o dopo la sconfitta del boss finale.
 
+Conclusioni
 
-## 5. Commenti finali
-
-### 5.1 Autovalutazione e lavori futuri (personale)
-**Punti di forza**: chiarezza architetturale, modularità, separazione delle responsabilità, aderenza ai pattern.  
-**Da migliorare**: fisica avanzata (pendenze/attrito), *broad-phase* per collisioni, editor di livelli, salvataggi persistenti.  
-**Evoluzioni proposte**: nuova tipologia di power‑up, IA nemici più sofisticata, modalità *time attack*, supporto controller, sistema di checkpoint.
-
-### 5.2 Difficoltà incontrate
-- Bilanciamento fra responsività del controllo e stabilità della fisica.
-- Gestione simultanea di molte collisioni con frame-time stabile.
-- Sincronizzazione fra aggiornamento logico e rendering.
-
-
+Il progetto SonicX rappresenta un caso pratico di come le tecniche di programmazione a oggetti possano essere applicate in un contesto videoludico.
+L’architettura modulare, la gestione del ciclo di gioco e l’integrazione con JavaFX dimostrano la capacità di coniugare teoria e pratica in un risultato concreto, interattivo e coerente con le logiche del game design moderno.
